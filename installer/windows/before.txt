@@ -1,0 +1,19 @@
+EQSCOPE by HUMBLE BEXAR AUDIO
+=============================
+
+EQScope shows exactly what an EQ plug-in does. It sends a perfectly flat test
+signal into the EQ and draws the EQ's frequency and phase response live, as you
+turn its knobs.
+
+This installs:
+  - the VST3 plug-in, in C:\Program Files\Common Files\VST3
+    (Ableton Live, Cubase, Reaper, Studio One, Bitwig, FL Studio...)
+  - the standalone app (optional)
+  - the user guide, with Start menu shortcuts
+
+Requires 64-bit Windows 10 or 11.
+
+If EQ Probe (EQScope's earlier name) is installed, this replaces it. Sessions
+saved with EQ Probe open in EQScope with their settings.
+
+Close your DAW before continuing.

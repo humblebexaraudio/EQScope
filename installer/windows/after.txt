@@ -1,0 +1,18 @@
+EQSCOPE IS INSTALLED
+====================
+
+1. Open your DAW and rescan plug-ins if it doesn't do so by itself.
+   EQScope is listed under Humble Bexar Audio.
+
+2. On one track, insert:
+      EQScope (press SIGNAL)  ->  the EQ you want to see  ->  EQScope (ANALYZE)
+   Use a track that is processing (some DAWs only run plug-ins while playing,
+   or while a track is armed or monitoring).
+
+3. Open the ANALYZE copy. When the green LOCKED light is on, the curve is
+   exact. Turn the EQ and the curve follows within about 0.18 seconds.
+
+For very narrow bands below about 60 Hz, press FINE on the SIGNAL copy.
+
+The user guide is in the Start menu under Humble Bexar Audio. The plug-in also
+has short instructions built in: press ? INSTRUCTIONS on the faceplate.

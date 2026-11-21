@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Installer layout for EQScope. make_installer.sh fills in @VERSION@. -->
+<installer-gui-script minSpecVersion="2">
+    <title>EQScope @VERSION@</title>
+    <organization>com.humblebexar</organization>
+    <domains enable_localSystem="true"/>
+    <options customize="allow" require-scripts="false" hostArchitectures="x86_64,arm64"/>
+    <allowed-os-versions><os-version min="12.7"/></allowed-os-versions>
+    <welcome file="welcome.html" mime-type="text/html"/>
+    <readme file="readme.html" mime-type="text/html"/>
+    <conclusion file="conclusion.html" mime-type="text/html"/>
+    <choices-outline>
+        <line choice="au"/>
+        <line choice="vst3"/>
+        <line choice="app"/>
+    </choices-outline>
+    <choice id="au" title="Audio Unit" description="For Logic Pro, GarageBand, MainStage and other AU hosts.">
+        <pkg-ref id="com.humblebexar.eqscope.au"/>
+    </choice>
+    <choice id="vst3" title="VST3" description="For Ableton Live, Cubase, Reaper, Studio One, Bitwig, FL Studio and other VST3 hosts.">
+        <pkg-ref id="com.humblebexar.eqscope.vst3"/>
+    </choice>
+    <choice id="app" title="Standalone app and user guide" description="Installed in /Applications/Humble Bexar Audio.">
+        <pkg-ref id="com.humblebexar.eqscope.app"/>
+    </choice>
+    <pkg-ref id="com.humblebexar.eqscope.au" version="@VERSION@">au.pkg</pkg-ref>
+    <pkg-ref id="com.humblebexar.eqscope.vst3" version="@VERSION@">vst3.pkg</pkg-ref>
+    <pkg-ref id="com.humblebexar.eqscope.app" version="@VERSION@">app.pkg</pkg-ref>
+</installer-gui-script>

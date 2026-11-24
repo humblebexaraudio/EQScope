@@ -51,7 +51,7 @@ jobs:
   macos:
     name: macOS installer (AU, VST3, Standalone)
     needs: [tests, guide]
-    runs-on: macos-latest
+    runs-on: macos-15-intel
     env:
       MACOS_CERTS_P12: ${{ secrets.MACOS_CERTS_P12 }}
       MACOS_CERTS_PASSWORD: ${{ secrets.MACOS_CERTS_PASSWORD }}
@@ -127,7 +127,7 @@ jobs:
   ios:
     name: iOS (AUv3 + app, compile check)
     needs: tests
-    runs-on: macos-latest
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
       - name: Configure

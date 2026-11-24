@@ -194,7 +194,7 @@ def build():
 
     # 2. Installing
     s += [para("2  Installing", H1),
-          para("macOS (12.7 Monterey or later)", H2),
+          para("macOS (10.13 High Sierra or later, Intel and Apple Silicon)", H2),
           steps(["Double-click <b>EQScope-1.0.0-macOS.pkg</b> and follow the steps. <b>Customize</b> lets you leave out the AU, the "
                  "VST3 or the standalone app.",
                  "If macOS says the installer can't be opened, Control-click it and choose <b>Open</b>, or open "
@@ -258,7 +258,7 @@ def build():
                  ["SNAPSHOT", "ANALYZE", "Freezes the current curve as an orange overlay, to compare settings or two different EQs. The LED shows a snapshot is stored. Saved with your session."],
                  ["CLEAR", "ANALYZE", "Removes the snapshot."],
                  ["ZERO", "ANALYZE", "Treats the current response as flat, cancelling anything else in the chain (an output trim, another plug-in). Press again to remove. Saved with your session."],
-                 ["FINISH swatches", "both", "Bottom left of the faceplate: Silver, Gunmetal Blue, Burnt Orange or Vintage (see section 6)."],
+                 ["FINISH swatches", "both", "Eight small round swatches at the bottom left of the faceplate; the current finish's name is shown beside them (see section 6)."],
                  ["? INSTRUCTIONS", "both", "Bottom right: opens short instructions on the faceplate (see section 5)."]],
                 [W * 0.22, W * 0.12, W * 0.66]),
           para("Using the knobs and screen", H2),
@@ -291,21 +291,28 @@ def build():
 
     # 6. Starting points
     s += [para("6  Faceplate finishes", H1),
-          para("Choose a finish with the <b>FINISH</b> swatches at the <b>bottom left of the faceplate</b>. Right-clicking the "
+          para("Choose a finish with the eight small round <b>FINISH</b> swatches at the <b>bottom left of the faceplate</b>: "
+               "the selected swatch has an amber ring and its name is shown beside the swatches. Right-clicking the "
                "faceplate, or clicking the EQSCOPE logo, gives the same choices. \u201cHumble Bexar Audio\u201d is on every finish. "
+               "Six are brushed metal; the two <b>Polished Enamel</b> finishes are smooth gloss paint with no brushed grain. "
                "The finish only changes the look: it's saved with your session, and the last finish you pick becomes the "
                "default for new copies of EQScope."),
-          table([["Finish", "Look", "Lettering"],
-                 ["Silver (default)", "Brushed aluminium, aluminium knob caps", "Black"],
-                 ["Gunmetal Blue", "Dark blued steel", "White"],
-                 ["Burnt Orange", "Brushed burnt-orange metal", "White"],
-                 ["Vintage", "Aged champagne brass with darker worn edges, a light patina and brass knob caps", "Dark brown"]],
-                [W * 0.22, W * 0.58, W * 0.2]),
-          Spacer(1, 8),
-          Table([[cell_image("silver.png", W * 0.47, "Silver"), cell_image("gunmetal-blue.png", W * 0.47, "Gunmetal Blue")],
-                 [cell_image("burnt-orange.png", W * 0.47, "Burnt Orange"), cell_image("vintage.png", W * 0.47, "Vintage")]],
-                colWidths=[W * 0.5, W * 0.5], style=[("VALIGN", (0, 0), (-1, -1), "TOP"),
-                                                     ("LEFTPADDING", (0, 0), (-1, -1), 2), ("RIGHTPADDING", (0, 0), (-1, -1), 2)]),
+          table([["Finish", "Surface", "Lettering", "Knob caps"],
+                 ["Silver (default)", "Brushed aluminium", "Black", "Aluminium"],
+                 ["Gunmetal Blue", "Brushed dark blued steel", "White", "Blued steel"],
+                 ["Burnt Orange", "Brushed burnt-orange metal", "White", "Bronze"],
+                 ["Vintage", "Brushed champagne brass, darker worn edges, light patina", "Dark brown", "Brass"],
+                 ["Glacier Blue", "Brushed pale icy-blue metal", "Navy", "Frosted aluminium"],
+                 ["Pecan", "Brushed warm brown metal", "Cream", "Copper"],
+                 ["Polished Enamel Cream", "Glossy cream enamel (not brushed)", "Dark brown", "Chrome"],
+                 ["Polished Enamel Black", "Glossy black enamel (not brushed)", "Cream", "Chrome"]],
+                [W * 0.25, W * 0.43, W * 0.15, W * 0.17]),
+          Spacer(1, 6),
+          Table([[cell_image(f + ".png", W * 0.235, n) for f, n in row] for row in
+                 [[("silver", "Silver"), ("gunmetal-blue", "Gunmetal Blue"), ("burnt-orange", "Burnt Orange"), ("vintage", "Vintage")],
+                  [("glacier-blue", "Glacier Blue"), ("pecan", "Pecan"), ("enamel-cream", "Enamel Cream"), ("enamel-black", "Enamel Black")]]],
+                colWidths=[W * 0.25] * 4, style=[("VALIGN", (0, 0), (-1, -1), "TOP"),
+                                                 ("LEFTPADDING", (0, 0), (-1, -1), 1), ("RIGHTPADDING", (0, 0), (-1, -1), 1)]),
           para("The default finish is stored in <i>~/Library/Application Support/Humble Bexar Audio/EQScope.settings</i> on macOS "
                "and <i>%APPDATA%\\Humble Bexar Audio\\EQScope.settings</i> on Windows.", SMALL),
           PageBreak()]
@@ -323,12 +330,12 @@ def build():
           para("8  Troubleshooting", H1),
           table([["Problem", "Fix"],
                  ["No lights, \u201cHOST NOT PROCESSING\u201d", "The host isn't running the channel. In Logic use an Aux channel strip; elsewhere press play or arm/monitor the track."],
+                 ["Screen says \u201cNO SIGNAL\u201d", "Open the first copy: SIGNAL must be lit (new copies start in ANALYZE), its screen must say GENERATING PROBE and its OUTPUT LED must be on. The ANALYZE copy must be the last of the three on the channel."],
                  ["NO PROBE light", "There's no SIGNAL copy before the EQ, or something in between adds changing audio (a synth, a modulated effect, noise). Keep only the EQ between the two copies."],
                  ["Screen says the EQ \u201crings longer than the Fast probe\u201d", "A very narrow low band rings longer than the Fast probe, so the low end is approximate (by more than 0.1 dB). Press FINE on the SIGNAL copy."],
                  ["Stays on SETTLING", "Something in the chain keeps changing: an LFO, an auto-gain, or an EQ with dynamic bands. Dynamic EQs and compressors can't show a steady response."],
                  ["Curve is offset up or down", "The EQ's output gain isn't at 0 dB, or another plug-in changes the level. Press ZERO with the EQ flat."],
-                 ["I hear a loud hiss", "That's the probe. Turn MONITOR off on the ANALYZE copy (it's off by default), or turn OUTPUT off on the SIGNAL copy when you're done."],
-                 ["Logic doesn't list it", "Logic Pro \u2192 Settings \u2192 Plug-in Manager, select EQScope, click Reset &amp; Rescan Selection. Then restart Logic."]],
+                 ["I hear a loud hiss", "That's the probe. Turn MONITOR off on the ANALYZE copy (it's off by default), or turn OUTPUT off on the SIGNAL copy when you're done."]],
                 [W * 0.3, W * 0.7]),
           PageBreak()]
 
@@ -340,7 +347,7 @@ def build():
                    "<b>iPhone and iPad:</b> delete the EQScope app. Its AUv3 is removed with it."]),
           para("Specifications", H1),
           table([["Formats", "macOS: AU, VST3, standalone. Windows: VST3, standalone. iOS/iPadOS: AUv3 (and app)."],
-                 ["Systems", "macOS 12.7 Monterey or later (Apple Silicon and Intel); Windows 10/11 64-bit; iOS/iPadOS 13 or later."],
+                 ["Systems", "macOS 10.13 High Sierra or later (Intel and Apple Silicon); Windows 10/11 64-bit; iOS/iPadOS 13 or later."],
                  ["Channels", "Mono or stereo"],
                  ["Probe signal", "Periodic flat-spectrum multisine (Schroeder phases), \u221218 dBFS RMS, 3.3 dB crest factor. Fast: about 170 ms period (8,192 samples at 48 kHz). Fine: about 680 ms."],
                  ["Response time", "About 0.18 s (Fast) or 0.7 s (Fine) from an EQ change to the full new curve; display updates up to 60 times a second"],

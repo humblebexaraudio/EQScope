@@ -82,8 +82,9 @@ private:
                "signal; put an EQScope in SIGNAL mode before your EQ.  All off: no audio is arriving.\n"
                "If the screen says the EQ rings longer than the Fast probe, press FINE on the SIGNAL copy.");
             h ("Finish");
-            p ("Choose Silver, Gunmetal Blue, Burnt Orange or Vintage with the FINISH swatches at the bottom left, "
-               "by right-clicking the faceplate, or by clicking the EQSCOPE logo. The last one you pick becomes the default.");
+            p ("Eight finishes: Silver, Gunmetal Blue, Burnt Orange, Vintage, Glacier Blue and Pecan (brushed metal), and "
+               "Polished Enamel Cream and Black (gloss enamel). Click a small round FINISH swatch at the bottom left, "
+               "right-click the faceplate, or click the EQSCOPE logo. The last one you pick becomes the default.");
             h ("More");
             p ("The full user guide is installed with the plug-in: on macOS in /Applications/Humble Bexar Audio, on Windows "
                "in the Start menu under Humble Bexar Audio.");

@@ -45,24 +45,24 @@ static juce::PropertiesFile::Options settingsOptions()
 int EQScopeProcessor::loadDefaultFinish()
 {
     juce::PropertiesFile props (settingsOptions());
-    return juce::jlimit (0, 3, props.getIntValue ("defaultFinish", 0));
+    return juce::jlimit (0, kNumFinishes - 1, props.getIntValue ("defaultFinish", 0));
 }
 
 void EQScopeProcessor::saveDefaultFinish (int finish)
 {
     juce::PropertiesFile props (settingsOptions());
-    props.setValue ("defaultFinish", juce::jlimit (0, 3, finish));
+    props.setValue ("defaultFinish", juce::jlimit (0, kNumFinishes - 1, finish));
     props.saveIfNeeded();
 }
 
 int EQScopeProcessor::getFinish() const
 {
-    return juce::jlimit (0, 3, (int) apvts.state.getProperty ("finish", 0));
+    return juce::jlimit (0, kNumFinishes - 1, (int) apvts.state.getProperty ("finish", 0));
 }
 
 void EQScopeProcessor::setFinish (int finish)
 {
-    finish = juce::jlimit (0, 3, finish);
+    finish = juce::jlimit (0, kNumFinishes - 1, finish);
     apvts.state.setProperty ("finish", finish, nullptr);
     saveDefaultFinish (finish);
 }

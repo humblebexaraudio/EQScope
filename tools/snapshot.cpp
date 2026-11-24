@@ -139,8 +139,9 @@ int main (int argc, char** argv)
             v->mouseMove (e);
         }
 
-    const char* names[] = { "silver", "gunmetal-blue", "burnt-orange", "vintage" };
-    for (int f = 0; f < 4; ++f)
+    const char* names[] = { "silver", "gunmetal-blue", "burnt-orange", "vintage",
+                            "glacier-blue", "pecan", "enamel-cream", "enamel-black" };
+    for (int f = 0; f < EQScopeProcessor::kNumFinishes; ++f)
     {
         ana.apvts.state.setProperty ("finish", f, nullptr);
         pump (250);

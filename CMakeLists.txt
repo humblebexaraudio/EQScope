@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 
 # Platform defaults. These must be set before project().
-#   macOS:   AU + VST3 + Standalone, universal (Apple Silicon + Intel), macOS 12.7 (Monterey) or later
+#   macOS:   AU + VST3 + Standalone, universal (Apple Silicon + Intel), macOS 10.13 (High Sierra) or later.
+#            10.13 is the oldest macOS current Xcode can build for. Apple Silicon Macs all run macOS 11 or later.
 #   iOS:     AUv3 + Standalone app (the app hosts the AUv3 extension), iOS 13+
 #            configure with -G Xcode -DCMAKE_SYSTEM_NAME=iOS
 #   Windows: VST3 + Standalone, x64, static MSVC runtime (no VC++ redistributable needed)
@@ -9,7 +10,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(CMAKE_OSX_DEPLOYMENT_TARGET "13.0" CACHE STRING "Minimum iOS")
     set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "iOS architecture")
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin") # APPLE isn't defined until project()
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "12.7" CACHE STRING "Minimum macOS")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum macOS")
     set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "Universal binary")
 endif()
 

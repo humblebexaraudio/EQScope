@@ -17,12 +17,14 @@ namespace col
 }
 
 //==============================================================================
-// Finishes (same set and order as SoftSpoken and Keystone).
-enum Finish { silver = 0, gunmetalBlue, burntOrange, vintage, numFinishes };
+// Finishes (same set and order as the other Humble Bexar Audio plug-ins). Sessions store the number,
+// so new finishes are only ever added at the end.
+enum Finish { silver = 0, gunmetalBlue, burntOrange, vintage, glacierBlue, pecan, enamelCream, enamelBlack, numFinishes };
 
 struct Palette
 {
     const char* name;
+    const char* shortName;               // shown beside the FINISH swatches
     juce::Colour metal;                  // brushed plate base colour
     juce::Colour ink, inkSoft;           // lettering (engraved and paint-filled)
     juce::Colour engraveEdge;            // the 1 px edge under the lettering: light on light plates, dark on dark ones
@@ -32,27 +34,44 @@ struct Palette
     float sheen;                         // strength of the key-light sheen
     float wear;                          // darker worn edges (Vintage)
     float patina;                        // light mottled patina (Vintage)
+    bool enamel;                         // polished enamel: smooth gloss paint, no brushed grain
 };
 
 inline const Palette& palette (int finish)
 {
     static const std::array<Palette, numFinishes> p {{
-        { "Silver",
+        { "Silver", "Silver",
           juce::Colour (0xffc8cbcf), juce::Colour (0xff1d2024), juce::Colour (0xff474c53), juce::Colour (0x8cffffff),
           juce::Colour (0xfff1f3f5), juce::Colour (0xff8b9198), juce::Colour (0xfff6f7f8), juce::Colour (0xff80868d),
-          juce::Colour (0xfff0f2f4), juce::Colour (0xff6d737a), 0.13f, 0.0f, 0.0f },
-        { "Gunmetal Blue",
+          juce::Colour (0xfff0f2f4), juce::Colour (0xff6d737a), 0.13f, 0.0f, 0.0f, false },
+        { "Gunmetal Blue", "Gunmetal Blue",
           juce::Colour (0xff3f4b5d), juce::Colour (0xfff1f4f8), juce::Colour (0xffbcc6d3), juce::Colour (0x8c000000),
           juce::Colour (0xffdfe5ec), juce::Colour (0xff6b7686), juce::Colour (0xffb7c1ce), juce::Colour (0xff3a4250),
-          juce::Colour (0xff8a96a6), juce::Colour (0xff1e242d), 0.09f, 0.0f, 0.0f },
-        { "Burnt Orange",
+          juce::Colour (0xff8a96a6), juce::Colour (0xff1e242d), 0.09f, 0.0f, 0.0f, false },
+        { "Burnt Orange", "Burnt Orange",
           juce::Colour (0xffb0561f), juce::Colour (0xfffbf3ea), juce::Colour (0xfff2d6bd), juce::Colour (0x80000000),
-          juce::Colour (0xfff1f3f5), juce::Colour (0xff8b9198), juce::Colour (0xfff0e6dc), juce::Colour (0xff7a5a44),
-          juce::Colour (0xffe0a57a), juce::Colour (0xff5a2a10), 0.11f, 0.0f, 0.0f },
-        { "Vintage",
+          juce::Colour (0xfff3d2aa), juce::Colour (0xff8a5a2e), juce::Colour (0xfff0e6dc), juce::Colour (0xff7a5a44),
+          juce::Colour (0xffe0a57a), juce::Colour (0xff5a2a10), 0.11f, 0.0f, 0.0f, false },
+        { "Vintage", "Vintage",
           juce::Colour (0xffcdb784), juce::Colour (0xff33220f), juce::Colour (0xff47331a), juce::Colour (0x66fff6dc),
           juce::Colour (0xfff6e6b8), juce::Colour (0xff9a7b40), juce::Colour (0xffeedcab), juce::Colour (0xff7a6034),
-          juce::Colour (0xfff3e4bd), juce::Colour (0xff6e5530), 0.10f, 1.0f, 1.0f },
+          juce::Colour (0xfff3e4bd), juce::Colour (0xff6e5530), 0.10f, 1.0f, 1.0f, false },
+        { "Glacier Blue", "Glacier Blue",
+          juce::Colour (0xffaecbdc), juce::Colour (0xff0f2740), juce::Colour (0xff2c4763), juce::Colour (0x80ffffff),
+          juce::Colour (0xfff4f7fa), juce::Colour (0xff8d9aa6), juce::Colour (0xfff4f8fb), juce::Colour (0xff7d8b97),
+          juce::Colour (0xffe8f1f7), juce::Colour (0xff5d7488), 0.14f, 0.0f, 0.0f, false },
+        { "Pecan", "Pecan",
+          juce::Colour (0xff7a5638), juce::Colour (0xfff3e7d0), juce::Colour (0xffdcc9a8), juce::Colour (0x80000000),
+          juce::Colour (0xfff0c9a0), juce::Colour (0xff7a4a26), juce::Colour (0xffe9dccb), juce::Colour (0xff6e5844),
+          juce::Colour (0xffc49a76), juce::Colour (0xff3a2616), 0.10f, 0.0f, 0.0f, false },
+        { "Polished Enamel Cream", "Enamel Cream",
+          juce::Colour (0xffece2cb), juce::Colour (0xff33220f), juce::Colour (0xff5f472a), juce::Colour (0x99ffffff),
+          juce::Colour (0xffffffff), juce::Colour (0xff7d838b), juce::Colour (0xfff8f9fa), juce::Colour (0xff7a8088),
+          juce::Colour (0xfff7f2e6), juce::Colour (0xff8a7f6a), 0.0f, 0.0f, 0.0f, true },
+        { "Polished Enamel Black", "Enamel Black",
+          juce::Colour (0xff16171a), juce::Colour (0xffefe6d2), juce::Colour (0xffc9bfa9), juce::Colour (0x99000000),
+          juce::Colour (0xffffffff), juce::Colour (0xff7d838b), juce::Colour (0xfff8f9fa), juce::Colour (0xff7a8088),
+          juce::Colour (0xff6a6e76), juce::Colour (0xff0c0d0f), 0.0f, 0.0f, 0.0f, true },
     }};
     return p[(size_t) juce::jlimit (0, (int) numFinishes - 1, finish)];
 }
@@ -105,11 +124,98 @@ inline juce::Image makeBrushedTile (juce::Colour base)
     return img;
 }
 
-// The plate: brushed tile, lighting, Vintage's wear and patina, and a machined edge.
+// Polished enamel texture: smooth paint with a faint orange-peel ripple and no grain direction.
+inline juce::Image makeEnamelTile (juce::Colour base)
+{
+    constexpr int w = 256, h = 256;
+    juce::Image img (juce::Image::RGB, w, h, false);
+    juce::Random rng (0x3e7a);
+    std::vector<float> noise ((size_t) (w * h)), tmp ((size_t) (w * h));
+    for (auto& v : noise) v = rng.nextFloat() - 0.5f;
+    for (int pass = 0; pass < 2; ++pass) // small circular blur both ways = soft orange peel that tiles seamlessly
+    {
+        for (int y = 0; y < h; ++y)
+            for (int x = 0; x < w; ++x)
+            {
+                float acc = 0.0f;
+                for (int d = -2; d <= 2; ++d)
+                    acc += pass == 0 ? noise[(size_t) (y * w + (x + d + w) % w)] : noise[(size_t) (((y + d + h) % h) * w + x)];
+                tmp[(size_t) (y * w + x)] = acc / 5.0f;
+            }
+        std::swap (noise, tmp);
+    }
+    juce::Image::BitmapData bd (img, juce::Image::BitmapData::writeOnly);
+    const float depth = base.getPerceivedBrightness() < 0.3f ? 0.10f : 0.035f;
+    for (int y = 0; y < h; ++y)
+        for (int x = 0; x < w; ++x)
+        {
+            const float v = noise[(size_t) (y * w + x)] * depth * 2.4f;
+            auto lift = [v] (float c) { return juce::jlimit (0.0f, 1.0f, c + v * (0.25f + c)); };
+            bd.setPixelColour (x, y, juce::Colour::fromFloatRGBA (lift (base.getFloatRed()), lift (base.getFloatGreen()),
+                                                                  lift (base.getFloatBlue()), 1.0f));
+        }
+    return img;
+}
+
+inline juce::Image makeSurfaceTile (const Palette& pal)
+{
+    return pal.enamel ? makeEnamelTile (pal.metal) : makeBrushedTile (pal.metal);
+}
+
+// Clear-coat gloss for the enamel finishes: two soft-box reflections and a bright top edge.
+inline void drawEnamelGloss (juce::Graphics& g, juce::Rectangle<float> r, const Palette& pal)
+{
+    const bool dark = pal.metal.getPerceivedBrightness() < 0.3f;
+    const float strength = dark ? 0.16f : 0.30f;
+
+    juce::ColourGradient body (juce::Colours::white.withAlpha (dark ? 0.06f : 0.10f), r.getX(), r.getY(),
+                               juce::Colours::black.withAlpha (dark ? 0.25f : 0.10f), r.getX(), r.getBottom(), false);
+    g.setGradientFill (body);
+    g.fillRect (r);
+
+    // Soft-box reflections: wide, soft, slightly tilted panels of light near the top.
+    for (int i = 0; i < 2; ++i)
+    {
+        const float x = r.getX() + r.getWidth() * (i == 0 ? 0.08f : 0.58f);
+        const float w = r.getWidth() * (i == 0 ? 0.30f : 0.24f);
+        juce::Path box;
+        box.addRoundedRectangle (x, r.getY() - r.getHeight() * 0.05f, w, r.getHeight() * 0.22f, r.getHeight() * 0.05f);
+        box.applyTransform (juce::AffineTransform::shear (-0.25f, 0.0f).translated (r.getHeight() * 0.03f, 0.0f));
+        const auto bb = box.getBounds();
+        juce::ColourGradient refl (juce::Colours::white.withAlpha (strength * (i == 0 ? 1.0f : 0.7f)), bb.getX(), bb.getY(),
+                                   juce::Colours::white.withAlpha (0.0f), bb.getX(), bb.getBottom(), false);
+        g.setGradientFill (refl);
+        g.fillPath (box);
+    }
+
+    // A long, faint diagonal sweep, as a lacquered surface catches a room light.
+    juce::ColourGradient sweep (juce::Colours::white.withAlpha (0.0f), r.getX(), r.getBottom(),
+                                juce::Colours::white.withAlpha (0.0f), r.getRight(), r.getY(), false);
+    sweep.addColour (0.55, juce::Colours::white.withAlpha (dark ? 0.05f : 0.07f));
+    sweep.addColour (0.62, juce::Colours::white.withAlpha (0.0f));
+    g.setGradientFill (sweep);
+    g.fillRect (r);
+
+    // Clear-coat edge: a bright line along the top and a soft rim all round.
+    g.setColour (juce::Colours::white.withAlpha (dark ? 0.35f : 0.6f));
+    g.drawHorizontalLine ((int) r.getY() + 2, r.getX() + 6.0f, r.getRight() - 6.0f);
+    g.setColour (juce::Colours::black.withAlpha (0.35f));
+    g.drawRoundedRectangle (r.reduced (1.5f), 4.0f, 1.0f);
+}
+
+// The plate: brushed tile (or enamel), lighting, Vintage's wear and patina, and a machined edge.
 inline void drawPlate (juce::Graphics& g, juce::Rectangle<float> r, const juce::Image& tile, const Palette& pal)
 {
     g.setTiledImageFill (tile, 0, 0, 1.0f);
     g.fillRect (r);
+
+    if (pal.enamel)
+    {
+        drawEnamelGloss (g, r, pal);
+        g.setColour (juce::Colours::black.withAlpha (0.55f));
+        g.drawRect (r, 1.0f);
+        return;
+    }
 
     juce::ColourGradient light (juce::Colours::white.withAlpha (0.20f), r.getX(), r.getY(),
                                 juce::Colours::black.withAlpha (0.14f), r.getX(), r.getBottom(), false);
@@ -463,8 +569,8 @@ private:
 };
 
 //==============================================================================
-// FINISH selector: engraved label plus one round swatch per finish, bottom left of the faceplate
-// (same layout and behaviour as SoftSpoken). The current finish has an amber ring.
+// FINISH selector: engraved label, eight small round swatches and the current finish's name,
+// bottom left of the faceplate. The current swatch has an amber ring.
 class FinishSwatches : public juce::Component, public juce::SettableTooltipClient
 {
 public:
@@ -472,61 +578,86 @@ public:
     const Palette* pal = &palette (silver);
     int current = silver;
 
-    FinishSwatches() { setTooltip ("Faceplate finish: Silver, Gunmetal Blue, Burnt Orange, Vintage"); }
+    FinishSwatches() { setTooltip ("Faceplate finish"); }
 
     void paint (juce::Graphics& g) override
     {
         const auto b = getLocalBounds().toFloat();
-        const float labelW = labelWidth();
-        drawEngraved (g, "FINISH", b.withWidth (labelW), font (fontSize(), true, 0.14f), juce::Justification::centredLeft, *pal);
+        drawEngraved (g, "FINISH", b.withWidth (labelWidth()), font (fontSize(), true, 0.14f), juce::Justification::centredLeft, *pal);
 
         for (int i = 0; i < numFinishes; ++i)
         {
             const auto sw = swatch (i);
             const auto& p = palette (i);
             g.setColour (juce::Colours::black.withAlpha (0.35f));
-            g.fillEllipse (sw.translated (0.0f, 1.0f).expanded (1.5f));
-            juce::ColourGradient body (p.metal.brighter (0.35f), sw.getX(), sw.getY(), p.metal.darker (0.35f), sw.getX(), sw.getBottom(), false);
+            g.fillEllipse (sw.translated (0.0f, 1.0f).expanded (1.0f));
+            juce::ColourGradient body (p.metal.brighter (p.enamel ? 0.15f : 0.35f), sw.getX(), sw.getY(),
+                                       p.metal.darker (0.35f), sw.getX(), sw.getBottom(), false);
             g.setGradientFill (body);
             g.fillEllipse (sw);
-            g.setColour (p.ink.withAlpha (0.9f));
-            g.fillEllipse (sw.withSizeKeepingCentre (sw.getWidth() * 0.22f, sw.getHeight() * 0.22f)); // lettering colour dot
-            g.setColour (juce::Colours::black.withAlpha (0.55f));
-            g.drawEllipse (sw, 1.0f);
+            if (p.enamel) // gloss glint on the enamel swatches
+            {
+                g.setColour (juce::Colours::white.withAlpha (0.75f));
+                g.fillEllipse (sw.getX() + sw.getWidth() * 0.22f, sw.getY() + sw.getHeight() * 0.16f, sw.getWidth() * 0.32f, sw.getHeight() * 0.22f);
+            }
+            g.setColour (juce::Colours::black.withAlpha (0.6f));
+            g.drawEllipse (sw, 0.9f);
             if (i == current)
             {
                 g.setColour (col::ledAmber);
-                g.drawEllipse (sw.expanded (3.0f), 2.0f);
+                g.drawEllipse (sw.expanded (2.6f), 1.8f);
             }
         }
+
+        // The current finish's name, if there's room for it.
+        const float nameX = swatch (numFinishes - 1).getRight() + 10.0f;
+        if (nameX + 40.0f < b.getRight())
+            drawEngraved (g, palette (current).shortName, b.withLeft (nameX), font (fontSize(), true, 0.06f),
+                          juce::Justification::centredLeft, *pal, true);
+    }
+
+    void mouseMove (const juce::MouseEvent& e) override
+    {
+        const int i = swatchAt (e.position);
+        setTooltip (i >= 0 ? juce::String (palette (i).name) : juce::String ("Faceplate finish"));
     }
 
     void mouseUp (const juce::MouseEvent& e) override
     {
-        for (int i = 0; i < numFinishes; ++i)
-            if (swatch (i).expanded (4.0f).contains (e.position) && onSelect)
-                onSelect (i);
+        const int i = swatchAt (e.position);
+        if (i >= 0 && onSelect)
+            onSelect (i);
     }
 
-    // Natural width for a given height.
+    // Natural width for a given height: label, swatches and room for the longest short name.
     int preferredWidth (int height) const
     {
-        const float d = (float) height * 0.66f;
-        return juce::roundToInt (labelWidthFor ((float) height) + (float) numFinishes * (d + 9.0f));
+        const float h = (float) height, d = swatchDiameter (h);
+        const float names = juce::GlyphArrangement::getStringWidth (font (fontSizeFor (h), true, 0.06f), "Gunmetal Blue") + 14.0f;
+        return juce::roundToInt (labelWidthFor (h) + 4.0f + (float) numFinishes * (d + gap (h)) + names);
     }
 
 private:
-    float fontSize() const { return juce::jlimit (8.5f, 11.0f, (float) getHeight() * 0.42f); }
-    float labelWidthFor (float h) const
+    static float fontSizeFor (float h) { return juce::jlimit (8.5f, 11.0f, h * 0.42f); }
+    static float swatchDiameter (float h) { return juce::jlimit (9.0f, 15.0f, h * 0.56f); }
+    static float gap (float h) { return juce::jlimit (4.0f, 7.0f, h * 0.27f); }
+    float fontSize() const { return fontSizeFor ((float) getHeight()); }
+    static float labelWidthFor (float h)
     {
-        const float fs = juce::jlimit (8.5f, 11.0f, h * 0.42f);
-        return juce::GlyphArrangement::getStringWidth (font (fs, true, 0.14f), "FINISH") + 10.0f;
+        return juce::GlyphArrangement::getStringWidth (font (fontSizeFor (h), true, 0.14f), "FINISH") + 8.0f;
     }
     float labelWidth() const { return labelWidthFor ((float) getHeight()); }
     juce::Rectangle<float> swatch (int i) const
     {
-        const float h = (float) getHeight(), d = h * 0.66f;
-        return { labelWidth() + 4.0f + (float) i * (d + 9.0f), (h - d) * 0.5f, d, d };
+        const float h = (float) getHeight(), d = swatchDiameter (h);
+        return { labelWidth() + 4.0f + (float) i * (d + gap (h)), (h - d) * 0.5f, d, d };
+    }
+    int swatchAt (juce::Point<float> p) const
+    {
+        for (int i = 0; i < numFinishes; ++i)
+            if (swatch (i).expanded (gap ((float) getHeight()) * 0.5f).contains (p))
+                return i;
+        return -1;
     }
 };
 

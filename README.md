@@ -40,41 +40,50 @@ It measures linear behaviour: dynamic EQs and compressors show their response at
 | **CLEAR** | Analyze | Removes the snapshot. |
 | **ZERO** | Analyze | Treats the current response as flat, cancelling anything else in the chain. Press again to remove. Saved with your session. |
 | **Status lights** | both | **LOCKED** (green): exact. **SETTLING** (amber): a knob is moving; the curve is dimmed slightly. **NO PROBE** (red): the audio isn't the probe. All off: nothing is arriving. |
-| **FINISH** | 4 swatches, bottom left | Faceplate finish (see below). |
+| **FINISH** | 8 small round swatches, bottom left | Faceplate finish (see below). |
 | **? INSTRUCTIONS** | button, bottom right | Opens the built-in instructions. |
 
 ## The panel
-The window is the EQScope faceplate (1040 × 660 at its default size), a brushed-metal plate drawn live in code with **Humble Bexar Audio** at the top right. On it:
+The window is the EQScope faceplate (1040 × 660 at its default size), a brushed-metal or polished-enamel plate drawn live in code with **Humble Bexar Audio** at the top right. On it:
 - four Phillips screws, and the **EQSCOPE** logo at the top left
 - three LED status lights (LOCKED, SETTLING, NO PROBE) with chrome bezels
 - a recessed black-glass screen with the response graph, the dashed **FLAT 0 dB** reference, the live curve (cyan), its phase (violet) and the snapshot (orange)
 - black rotary selector knobs with knurled skirts, spun-metal caps and white pointers, their positions engraved around them
 - black push buttons, each with an amber LED above it (green for OUTPUT)
+- the **FINISH** swatches at the bottom left and **? INSTRUCTIONS** at the bottom right
 
 If an EQ has a very narrow, deep low band that rings longer than the Fast probe, the screen says so and suggests pressing **FINE** on the SIGNAL copy.
 
 ### Faceplate finishes
-Choose a finish with the **FINISH** swatches at the **bottom left of the faceplate** (same layout and behaviour as SoftSpoken). Right-clicking the faceplate or clicking the **EQSCOPE** logo gives the same choices. "Humble Bexar Audio" is on every finish:
+Choose a finish with the eight small round **FINISH** swatches at the **bottom left of the faceplate**: the selected swatch has an amber ring and its name is shown beside the swatches. Right-clicking the faceplate or clicking the **EQSCOPE** logo gives the same choices. "Humble Bexar Audio" is on every finish. Six are brushed metal; the two **Polished Enamel** finishes are smooth gloss paint with a clear-coat shine and no brushed grain (they keep the same knobs, LEDs and screws):
 
-| Finish | Look | Lettering |
-|---|---|---|
-| **Silver** (default) | Brushed aluminium, aluminium knob caps | Black |
-| **Gunmetal Blue** | Dark blued steel | White |
-| **Burnt Orange** | Brushed burnt-orange metal | White |
-| **Vintage** | Aged champagne brass with darker worn edges, a light patina and brass knob caps | Dark brown |
+| Finish | Surface | Lettering | Knob caps |
+|---|---|---|---|
+| **Silver** (default) | Brushed aluminium | Black | Aluminium |
+| **Gunmetal Blue** | Brushed dark blued steel | White | Blued steel |
+| **Burnt Orange** | Brushed burnt-orange metal | White | Bronze |
+| **Vintage** | Brushed champagne brass with darker worn edges and a light patina | Dark brown | Brass |
+| **Glacier Blue** | Brushed pale icy-blue metal | Navy | Frosted aluminium |
+| **Pecan** | Brushed warm brown metal | Cream | Copper |
+| **Polished Enamel Cream** | Glossy cream enamel (not brushed) | Dark brown | Chrome |
+| **Polished Enamel Black** | Glossy black enamel (not brushed) | Cream | Chrome |
 
 | Silver | Gunmetal Blue |
 |---|---|
 | ![](docs/images/silver.png) | ![](docs/images/gunmetal-blue.png) |
 | **Burnt Orange** | **Vintage** |
 | ![](docs/images/burnt-orange.png) | ![](docs/images/vintage.png) |
+| **Glacier Blue** | **Pecan** |
+| ![](docs/images/glacier-blue.png) | ![](docs/images/pecan.png) |
+| **Polished Enamel Cream** | **Polished Enamel Black** |
+| ![](docs/images/enamel-cream.png) | ![](docs/images/enamel-black.png) |
 
-The finish only changes the look. It's saved with your session, and the last finish you pick becomes the default for new instances. That default is stored in `~/Library/Application Support/Humble Bexar Audio/EQScope.settings` (on Windows, `%APPDATA%\Humble Bexar Audio\EQScope.settings`).
+The finish only changes the look. It's saved with your session (as a number; new finishes are only ever added at the end, so old sessions keep theirs), and the last finish you pick becomes the default for new instances. That default is stored in `~/Library/Application Support/Humble Bexar Audio/EQScope.settings` (on Windows, `%APPDATA%\Humble Bexar Audio\EQScope.settings`).
 
 - **Knobs:** drag up or down, scroll, or click an engraved position to jump to it. Double-click resets to the default.
 - **Reading values:** hover over the graph (tap or drag on a touch screen) for frequency, gain and phase.
 - **Resizing:** drag the corner on Mac and Windows (480 × 360 up to 2400 × 1400). On iPhone and iPad the host sets the size: the controls wrap onto two or three rows, and on very short screens the phase pane steps aside.
-- **Changing the look:** each finish's colours are in `faceplate::palette()` in `Source/Faceplate.h`, the brushed texture in `faceplate::makeBrushedTile()`, Vintage's wear and patina in `faceplate::drawPlate()`, and the control layout in `EQScopeEditor::resized()`.
+- **Changing the look:** each finish's colours are in `faceplate::palette()` in `Source/Faceplate.h` (set `enamel` for a glossy, unbrushed finish). The brushed texture is `faceplate::makeBrushedTile()`, the enamel surface `makeEnamelTile()` and its gloss `drawEnamelGloss()`, Vintage's wear and patina are in `drawPlate()`, and the control layout is in `EQScopeEditor::resized()`.
 
 ## User guide
 `docs/EQScope User Guide.pdf` (built from the Frazzler guide's layout) is the guide for people using the plug-in: how it works, installing on macOS, Windows and iOS (including upgrading from EQ Probe), setting up a measurement in Logic, other DAWs and on iPad, every control, the status lights and screen, the built-in instructions, the finishes, starting points, troubleshooting, uninstalling and specifications. Both installers include it:
@@ -87,6 +96,8 @@ The plug-in also has short instructions built in (**? INSTRUCTIONS** on the face
 
 ## Setting up a measurement
 **Logic Pro:** create an **Aux channel strip** (**Mixer → Options → Create New Auxiliary Channel Strip**); aux strips are always processing, so you don't need to press play. Insert **EQScope** (press **SIGNAL**), then your EQ, then **EQScope** again (leave it on **ANALYZE**). Open the last one: the **LOCKED** light comes on. Turn the EQ's knobs and the curve follows.
+
+If the ANALYZE copy says **NO SIGNAL**, open the first copy: it must have **SIGNAL** lit (new copies start in ANALYZE), its screen must say **GENERATING PROBE**, and its **OUTPUT** LED must be on. The ANALYZE copy must be the last of the three. EQScope reports an endless "tail" to the host, so Logic and other DAWs keep running the SIGNAL copy even though nothing comes into the channel.
 
 **Other DAWs:** the same three inserts on one track. Use a track that is processing (some DAWs only run plug-ins while playing, or while the track is armed or monitoring).
 
@@ -106,7 +117,7 @@ The build copies the plug-in here automatically:
 - `~/Library/Audio/Plug-Ins/VST3/EQScope.vst3` (Ableton, Cubase, Reaper, Studio One, FL Studio, Bitwig…)
 - The standalone app is in `build/EQScope_artefacts/Release/Standalone/`
 
-The binary is universal (Apple Silicon and Intel) and runs on **macOS 12.7 Monterey or later**.
+The binary is universal (Apple Silicon and Intel) and runs on **macOS 10.13 High Sierra or later**, so it works on older Intel Macs too. 10.13 is the oldest macOS current Xcode can build for; macOS 10.11 and 10.12 would need Xcode 13 or older on an Intel Mac (add `-DCMAKE_OSX_DEPLOYMENT_TARGET=10.11` to the first cmake command).
 
 **Windows:** the same CMake project builds a VST3 and a standalone app with Visual Studio 2022 or newer (**Desktop development with C++**): `cmake -B build -A x64` then `cmake --build build --config Release`. AU is skipped automatically. The plug-in uses the static Visual C++ runtime, so it runs on PCs without the redistributable. Copying into `C:\Program Files\Common Files\VST3` needs admin rights, so the build doesn't do it on Windows: use the installer, copy `build\EQScope_artefacts\Release\VST3\EQScope.vst3` there yourself, or configure from an administrator terminal with `-DEQSCOPE_COPY_AFTER_BUILD=ON`. To pick formats yourself, pass `-DEQSCOPE_FORMATS="VST3;Standalone"`.
 
@@ -154,10 +165,10 @@ cmake --build build-tests
 ./build-tests/eqscope_tests
 ```
 
-The faceplate screenshots in `docs/images` come from the real editor code: configure with `-DEQSCOPE_SNAPSHOT=ON`, build the `eqscope_snapshot` target and run it with `docs/images` as its argument. It plays the probe through a simulated 3-band EQ into a SIGNAL and an ANALYZE instance, keeps a snapshot of a +6 dB bell, then renders each finish, the SIGNAL view, the instructions and an iPhone-sized view. On a headless Linux machine, run it under `xvfb-run`.
+The faceplate screenshots in `docs/images` come from the real editor code: configure with `-DEQSCOPE_SNAPSHOT=ON`, build the `eqscope_snapshot` target and run it with `docs/images` as its argument. It plays the probe through a simulated 3-band EQ into a SIGNAL and an ANALYZE instance, keeps a snapshot of a +6 dB bell, then renders all eight finishes, the SIGNAL view, the instructions and an iPhone-sized view. On a headless Linux machine, run it under `xvfb-run`.
 
 ## Making installers
-**macOS:** after a Release build and `python3 docs/make_user_guide.py`, run `./installer/macos/make_installer.sh`. It creates `dist/EQScope-1.0.0-macOS.pkg`, which installs the AU and VST3 for all users, plus the standalone app and the user guide in `/Applications/Humble Bexar Audio`. **Customize** in the installer lets people pick which of the three to install. It requires macOS 12.7 or later, shows welcome, readme and conclusion pages, and removes EQ Probe if it's installed.
+**macOS:** after a Release build and `python3 docs/make_user_guide.py`, run `./installer/macos/make_installer.sh`. It creates `dist/EQScope-1.0.0-macOS.pkg`, which installs the AU and VST3 for all users, plus the standalone app and the user guide in `/Applications/Humble Bexar Audio`. **Customize** in the installer lets people pick which of the three to install. It installs on macOS 10.13 High Sierra or later (Intel and Apple Silicon), shows welcome, readme and conclusion pages, and removes EQ Probe if it's installed. The script is written for the Bash 3.2 that ships with macOS, so it runs on any Mac without extra tools.
 
 - **Unsigned** (free): works, but macOS blocks it the first time. The other person has to Control-click it and choose Open, or go to **System Settings → Privacy & Security** and click **Open Anyway**.
 - **Signed and notarized** (needs a paid Apple Developer account): opens with no warnings. Create "Developer ID Application" and "Developer ID Installer" certificates, run `xcrun notarytool store-credentials eqscope-notary` once, then set `APP_CERT`, `INST_CERT` and `NOTARY_PROFILE` (see the top of the script) before running it.
@@ -166,7 +177,7 @@ The faceplate screenshots in `docs/images` come from the real editor code: confi
 
 ## Building installers on GitHub (no Mac or PC needed)
 Push this folder to a GitHub repository. The workflow in `.github/workflows/build.yml` runs on every push. It runs the DSP tests, publishes the user guide, then builds:
-- **EQScope-1.0.0-macOS.pkg** for macOS (AU + VST3 + app, universal, checked with `auval`), on GitHub's Mac machines
+- **EQScope-1.0.0-macOS.pkg** for macOS 10.13 or later (AU + VST3 + app, universal, checked with `auval` after the installer is uploaded), on GitHub's Mac machines
 - **EQScope-1.0.0-Windows-Setup.exe** for Windows (VST3 + standalone, made with Inno Setup from `installer/windows/EQScope.iss`)
 - the iOS AUv3 and app, unsigned, to check that it compiles
 
@@ -192,7 +203,7 @@ Measurement settings live in `Source/EQScopeDSP.h`:
 | `Source/EQScopeDSP.h` | Probe signals, transfer-function analyzer, delay/phase handling, ringing check, display resampling (no JUCE dependency) |
 | `Source/PluginProcessor.*` | Parameters, probe generator, capture ring buffer, finish, zero/snapshot save and restore, loading EQ Probe sessions |
 | `Source/PluginEditor.*` | The faceplate layout, status lights, finish menu, control wiring, analysis loop, and the response screen |
-| `Source/Faceplate.h` | The four finishes and the drawing of the plate, screws, LEDs, push buttons, selector knobs and FINISH swatches |
+| `Source/Faceplate.h` | The eight finishes and the drawing of the brushed and enamel plates, screws, LEDs, push buttons, selector knobs and FINISH swatches |
 | `Source/Instructions.h` | The built-in instructions |
 | `tools/snapshot.cpp` | Renders the faceplate screenshots |
 | `docs/make_user_guide.py` | Builds `docs/EQScope User Guide.pdf` |

@@ -3,6 +3,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "EQScopeDSP.h"
 #include <atomic>
+#include <limits>
 
 class EQScopeProcessor : public juce::AudioProcessor
 {
@@ -26,7 +27,9 @@ public:
     bool acceptsMidi() const override { return false; }
     bool producesMidi() const override { return false; }
     bool isMidiEffect() const override { return false; }
-    double getTailLengthSeconds() const override { return 0.0; }
+    // Endless tail: the SIGNAL copy makes sound from a silent input, so hosts must never pause it
+    // (Logic and others stop calling plug-ins on a silent channel once their tail has run out).
+    double getTailLengthSeconds() const override { return std::numeric_limits<double>::infinity(); }
 
     int getNumPrograms() override { return 1; }
     int getCurrentProgram() override { return 0; }
@@ -60,8 +63,10 @@ public:
     bool hasZero() const;
     bool hasSnapshot() const;
 
-    // Faceplate finish (0 Silver, 1 Gunmetal Blue, 2 Burnt Orange, 3 Vintage). Saved with the session;
+    // Faceplate finish (0 Silver, 1 Gunmetal Blue, 2 Burnt Orange, 3 Vintage, 4 Glacier Blue, 5 Pecan,
+    // 6 Polished Enamel Cream, 7 Polished Enamel Black). Saved with the session;
     // the last one picked also becomes the default for new instances. Message thread.
+    static constexpr int kNumFinishes = 8;
     int getFinish() const;
     void setFinish (int finish);
     static int loadDefaultFinish();

@@ -700,7 +700,7 @@ void EQScopeEditor::applyFinish (int finish)
     currentFinish = finish;
     pal = &faceplate::palette (finish);
     if (! tiles[(size_t) finish].isValid())
-        tiles[(size_t) finish] = faceplate::makeBrushedTile (pal->metal);
+        tiles[(size_t) finish] = faceplate::makeSurfaceTile (*pal);
     lnf.pal = pal;
     for (auto* k : { &channelKnob, &rangeKnob, &smoothKnob })
         k->pal = pal;
@@ -879,8 +879,9 @@ void EQScopeEditor::resized()
 
     const int footerH = compact ? 20 : 24;
     auto footer = area.removeFromBottom (footerH + (compact ? 6 : 8)).withTrimmedBottom (compact ? 6 : 8).reduced (side, 0);
-    finishSwatches.setBounds (footer.removeFromLeft (juce::jmin (footer.getWidth() / 2, finishSwatches.preferredWidth (footerH))));
     instructionsBtn.setBounds (footer.removeFromRight (compact ? 104 : 124));
+    footer.removeFromRight (8);
+    finishSwatches.setBounds (footer.removeFromLeft (juce::jmin (footer.getWidth(), finishSwatches.preferredWidth (footerH))));
     instructions.setBounds (getLocalBounds());
 
     const int controlsH = (int) rows.size() * rowH + ((int) rows.size() - 1) * rowGap;

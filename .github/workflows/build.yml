@@ -1,8 +1,8 @@
 name: Build installers
 
 # Runs the DSP tests, makes the user guide, then builds:
-#   macOS   -> dist/EQScope-1.0.0-macOS.pkg         (AU + VST3 + app + guide, universal, macOS 10.13+)
-#   Windows -> dist/EQScope-1.0.0-Windows-Setup.exe (VST3 + app + guide, x64)
+#   macOS   -> dist/EQScope-1.1.0-macOS.pkg         (AU + VST3 + app + guide, universal, macOS 10.13+)
+#   Windows -> dist/EQScope-1.1.0-Windows-Setup.exe (VST3 + app + guide, x64)
 #   iOS     -> AUv3 + app, unsigned (compile check; installing needs your own signing in Xcode)
 # Download the results from the run's Artifacts section on the Actions tab.
 #
@@ -88,7 +88,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: EQScope-macOS-Installer
-          path: dist/EQScope-1.0.0-macOS.pkg
+          path: dist/EQScope-1.1.0-macOS.pkg
       # Checks the AU loads and passes Apple's validator. Runs after the upload, so the installer
       # is always available to download even if the runner's Audio Unit registry is slow to update.
       - name: Validate the AU
@@ -122,7 +122,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: EQScope-Windows-Installer
-          path: dist/EQScope-1.0.0-Windows-Setup.exe
+          path: dist/EQScope-1.1.0-Windows-Setup.exe
 
   ios:
     name: iOS (AUv3 + app, compile check)
@@ -134,3 +134,29 @@ jobs:
         run: cmake -B build-ios -G Xcode -DCMAKE_SYSTEM_NAME=iOS
       - name: Build (unsigned)
         run: cmake --build build-ios --config Release -- -sdk iphoneos CODE_SIGNING_ALLOWED=NO -quiet
+
+  release:
+    # A pushed version tag (v1.1.0, …) attaches the installers and the user guide to that tag's GitHub release.
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [macos, windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: assets
+          merge-multiple: true
+      - name: Publish the installers and guide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          find assets -type f \( -name '*.pkg' -o -name '*.exe' -o -name '*.pdf' -o -name '*.zip' \) -print
+          if ! gh release view "$TAG" -R "$REPO" >/dev/null 2>&1; then
+            gh release create "$TAG" -R "$REPO" --verify-tag --title "${REPO#*/} ${TAG#v}" \
+              --notes "Installers and user guide for ${TAG#v}, built from ${GITHUB_SHA::7}."
+          fi
+          find assets -type f \( -name '*.pkg' -o -name '*.exe' -o -name '*.pdf' -o -name '*.zip' \) -print0 \
+            | xargs -0 gh release upload "$TAG" -R "$REPO" --clobber

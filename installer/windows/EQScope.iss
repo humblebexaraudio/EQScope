@@ -2,10 +2,10 @@
 ; Build the plug-in first (Release) and make the user guide (python docs\make_user_guide.py), then from
 ; the project folder run:
 ;   iscc installer\windows\EQScope.iss
-; It creates dist\EQScope-1.0.0-Windows-Setup.exe. The GitHub workflow does all of this automatically.
+; It creates dist\EQScope-1.1.0-Windows-Setup.exe. The GitHub workflow does all of this automatically.
 
 #define AppName "EQScope"
-#define AppVersion "1.0.0"
+#define AppVersion "1.1.0"
 #define Publisher "Humble Bexar Audio"
 #define BuildDir "..\..\build\EQScope_artefacts\Release"
 

@@ -18,8 +18,11 @@ from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Image, Tab
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 IMG = os.path.join(HERE, "images")
+
+# Humble Bexar bear head icon, centred at the top of the cover page (Humble-Bexar-Logo-Options.md)
+BEAR_ICON = os.path.join(os.path.dirname(HERE), "Resources", "logo", "humble-bexar-bear-head-icon.png")
 OUT = os.path.join(HERE, "EQScope User Guide.pdf")
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 # ---------------------------------------------------------------- fonts
 FONT_DIRS = ["/usr/share/fonts/truetype/dejavu", "/Library/Fonts", "/System/Library/Fonts/Supplemental",
@@ -137,16 +140,18 @@ def on_cover(canvas, doc):
     canvas.saveState()
     w, h = letter
     canvas.setFillColor(colors.HexColor("#c8cbcf"))
-    canvas.rect(0, h - 2.3 * inch, w, 2.3 * inch, stroke=0, fill=1)
+    canvas.rect(0, h - 3.2 * inch, w, 3.2 * inch, stroke=0, fill=1)
+    icon = 1.0 * inch
+    canvas.drawImage(BEAR_ICON, (w - icon) / 2, h - 0.3 * inch - icon, icon, icon, mask="auto")
     canvas.setFillColor(colors.HexColor("#202327"))
     canvas.setFont(BOLD, 34)
-    canvas.drawString(doc.leftMargin, h - 1.25 * inch, "EQSCOPE")
+    canvas.drawString(doc.leftMargin, h - 2.15 * inch, "EQSCOPE")
     canvas.setFont(BOLD, 11)
     canvas.setFillColor(colors.HexColor("#4a4f56"))
-    canvas.drawString(doc.leftMargin, h - 1.62 * inch, "H U M B L E   B E X A R   A U D I O")
+    canvas.drawString(doc.leftMargin, h - 2.52 * inch, "H U M B L E   B E X A R   A U D I O")
     canvas.setFont(BODY, 11)
-    canvas.drawRightString(w - doc.rightMargin, h - 1.25 * inch, "User Guide")
-    canvas.drawRightString(w - doc.rightMargin, h - 1.5 * inch, "Version " + VERSION)
+    canvas.drawRightString(w - doc.rightMargin, h - 2.15 * inch, "User Guide")
+    canvas.drawRightString(w - doc.rightMargin, h - 2.4 * inch, "Version " + VERSION)
     canvas.restoreState()
     on_page(canvas, doc)
 
@@ -159,12 +164,12 @@ def build():
     s = []
 
     # Cover
-    s += [Spacer(1, 1.55 * inch),
+    s += [Spacer(1, 2.45 * inch),
           para("See exactly what your EQ is doing.", ParagraphStyle("Lead", parent=H1, fontSize=17)),
           para("EQScope sends a perfectly flat test signal into any EQ plug-in and draws the EQ's frequency and phase "
                "response live, as you turn its knobs. It works with any EQ in any host on macOS, Windows, iPhone and iPad."),
           Spacer(1, 6),
-          image("silver.png", W * 0.9, "EQScope in ANALYZE mode: the live response (cyan) of a three-band EQ, with an earlier "
+          image("silver.png", W * 0.72, "EQScope in ANALYZE mode: the live response (cyan) of a three-band EQ, with an earlier "
                 "setting kept as a snapshot (orange)."),
           Spacer(1, 4),
           table([["In this guide", ""],
@@ -195,7 +200,7 @@ def build():
     # 2. Installing
     s += [para("2  Installing", H1),
           para("macOS (10.13 High Sierra or later, Intel and Apple Silicon)", H2),
-          steps(["Double-click <b>EQScope-1.0.0-macOS.pkg</b> and follow the steps. <b>Customize</b> lets you leave out the AU, the "
+          steps(["Double-click <b>EQScope-1.1.0-macOS.pkg</b> and follow the steps. <b>Customize</b> lets you leave out the AU, the "
                  "VST3 or the standalone app.",
                  "If macOS says the installer can't be opened, Control-click it and choose <b>Open</b>, or open "
                  "<b>System Settings \u2192 Privacy &amp; Security</b> and click <b>Open Anyway</b>. "
@@ -209,7 +214,7 @@ def build():
           para("<b>Upgrading from EQ Probe:</b> EQScope was called EQ Probe before version 1.0. The installers replace "
                "EQ Probe, and sessions saved with it open in EQScope with all their settings.", SMALL),
           para("Windows (10 and 11, 64-bit)", H2),
-          steps(["Run <b>EQScope-1.0.0-Windows-Setup.exe</b>. If SmartScreen appears, click <b>More info \u2192 Run anyway</b>.",
+          steps(["Run <b>EQScope-1.1.0-Windows-Setup.exe</b>. If SmartScreen appears, click <b>More info \u2192 Run anyway</b>.",
                  "Choose whether to install the standalone app. The VST3 and this guide are always installed.",
                  "Rescan plug-ins in your DAW. EQScope is listed under <b>Humble Bexar Audio</b>."]),
           table([["Installed", "Where"],

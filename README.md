@@ -168,17 +168,17 @@ cmake --build build-tests
 The faceplate screenshots in `docs/images` come from the real editor code: configure with `-DEQSCOPE_SNAPSHOT=ON`, build the `eqscope_snapshot` target and run it with `docs/images` as its argument. It plays the probe through a simulated 3-band EQ into a SIGNAL and an ANALYZE instance, keeps a snapshot of a +6 dB bell, then renders all eight finishes, the SIGNAL view, the instructions and an iPhone-sized view. On a headless Linux machine, run it under `xvfb-run`.
 
 ## Making installers
-**macOS:** after a Release build and `python3 docs/make_user_guide.py`, run `./installer/macos/make_installer.sh`. It creates `dist/EQScope-1.0.0-macOS.pkg`, which installs the AU and VST3 for all users, plus the standalone app and the user guide in `/Applications/Humble Bexar Audio`. **Customize** in the installer lets people pick which of the three to install. It installs on macOS 10.13 High Sierra or later (Intel and Apple Silicon), shows welcome, readme and conclusion pages, and removes EQ Probe if it's installed. The script is written for the Bash 3.2 that ships with macOS, so it runs on any Mac without extra tools.
+**macOS:** after a Release build and `python3 docs/make_user_guide.py`, run `./installer/macos/make_installer.sh`. It creates `dist/EQScope-1.1.0-macOS.pkg`, which installs the AU and VST3 for all users, plus the standalone app and the user guide in `/Applications/Humble Bexar Audio`. **Customize** in the installer lets people pick which of the three to install. It installs on macOS 10.13 High Sierra or later (Intel and Apple Silicon), shows welcome, readme and conclusion pages, and removes EQ Probe if it's installed. The script is written for the Bash 3.2 that ships with macOS, so it runs on any Mac without extra tools.
 
 - **Unsigned** (free): works, but macOS blocks it the first time. The other person has to Control-click it and choose Open, or go to **System Settings → Privacy & Security** and click **Open Anyway**.
 - **Signed and notarized** (needs a paid Apple Developer account): opens with no warnings. Create "Developer ID Application" and "Developer ID Installer" certificates, run `xcrun notarytool store-credentials eqscope-notary` once, then set `APP_CERT`, `INST_CERT` and `NOTARY_PROFILE` (see the top of the script) before running it.
 
-**Windows:** after a Release build and making the guide, run `iscc installer\windows\EQScope.iss` ([Inno Setup](https://jrsoftware.org/isinfo.php) 6.3 or newer). It creates `dist\EQScope-1.0.0-Windows-Setup.exe`, which installs the VST3, the standalone app, the user guide and Start menu shortcuts, shows before/after pages, and adds an uninstaller. It upgrades an existing EQ Probe install in place.
+**Windows:** after a Release build and making the guide, run `iscc installer\windows\EQScope.iss` ([Inno Setup](https://jrsoftware.org/isinfo.php) 6.3 or newer). It creates `dist\EQScope-1.1.0-Windows-Setup.exe`, which installs the VST3, the standalone app, the user guide and Start menu shortcuts, shows before/after pages, and adds an uninstaller. It upgrades an existing EQ Probe install in place.
 
 ## Building installers on GitHub (no Mac or PC needed)
 Push this folder to a GitHub repository. The workflow in `.github/workflows/build.yml` runs on every push. It runs the DSP tests, publishes the user guide, then builds:
-- **EQScope-1.0.0-macOS.pkg** for macOS 10.13 or later (AU + VST3 + app, universal, checked with `auval` after the installer is uploaded), on GitHub's Mac machines
-- **EQScope-1.0.0-Windows-Setup.exe** for Windows (VST3 + standalone, made with Inno Setup from `installer/windows/EQScope.iss`)
+- **EQScope-1.1.0-macOS.pkg** for macOS 10.13 or later (AU + VST3 + app, universal, checked with `auval` after the installer is uploaded), on GitHub's Mac machines
+- **EQScope-1.1.0-Windows-Setup.exe** for Windows (VST3 + standalone, made with Inno Setup from `installer/windows/EQScope.iss`)
 - the iOS AUv3 and app, unsigned, to check that it compiles
 
 Both installers include the user guide.

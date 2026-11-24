@@ -1,4 +1,5 @@
 #include "PluginEditor.h"
+#include "BexarLogo.h"
 
 namespace colours
 {
@@ -778,7 +779,10 @@ void EQScopeEditor::drawHeader (juce::Graphics& g) const
     const auto lf = font (compact ? 9.0f : 10.0f, true, 0.08f);
     const float ledR = compact ? 3.6f : 4.4f;
     const float titleW = juce::GlyphArrangement::getStringWidth (titleFont, "EQSCOPE") + 4.0f;
-    const float makerW = juce::GlyphArrangement::getStringWidth (makerFont, "HUMBLE BEXAR AUDIO") + 4.0f;
+    const float makerW = juce::GlyphArrangement::getStringWidth (makerFont, "HUMBLE BEXAR AUDIO") + 4.0f
+                         + bexar::bearWidthFor (makerFont);
+    // [bear] HUMBLE BEXAR AUDIO: cream-outline bear on Gunmetal Blue and Polished Enamel Black
+    const bool darkFinish = juce::String (pal->name) == "Gunmetal Blue" || juce::String (pal->name) == "Polished Enamel Black";
 
     struct Light { const char* label; juce::Colour colour; bool on; };
     const bool live = ! panelStalled;
@@ -798,7 +802,9 @@ void EQScopeEditor::drawHeader (juce::Graphics& g) const
         logoArea = h.withWidth (titleW);
         drawEngraved (g, "EQSCOPE", logoArea, titleFont, juce::Justification::centredLeft, *pal);
         auto right = h.removeFromRight (makerW);
-        drawEngraved (g, "HUMBLE BEXAR AUDIO", right, makerFont, juce::Justification::centredRight, *pal, true);
+        drawEngraved (g, "HUMBLE BEXAR AUDIO",
+                      bexar::drawBearBeforeLabel (g, "HUMBLE BEXAR AUDIO", makerFont, right, juce::Justification::centredRight, darkFinish),
+                      makerFont, juce::Justification::centredRight, *pal, true);
         lightsRow = h.withTrimmedRight (24.0f);
     }
     else
@@ -806,7 +812,9 @@ void EQScopeEditor::drawHeader (juce::Graphics& g) const
         auto top = h.removeFromTop (h.getHeight() * 0.55f);
         logoArea = top.withWidth (titleW);
         drawEngraved (g, "EQSCOPE", logoArea, titleFont, juce::Justification::centredLeft, *pal);
-        drawEngraved (g, "HUMBLE BEXAR AUDIO", top, makerFont, juce::Justification::centredRight, *pal, true);
+        drawEngraved (g, "HUMBLE BEXAR AUDIO",
+                      bexar::drawBearBeforeLabel (g, "HUMBLE BEXAR AUDIO", makerFont, top, juce::Justification::centredRight, darkFinish),
+                      makerFont, juce::Justification::centredRight, *pal, true);
         lightsRow = h;
     }
 

@@ -17,7 +17,7 @@ endif()
 # Static MSVC runtime, so the plug-in loads on PCs without the Visual C++ redistributable.
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-project(EQScope VERSION 1.0.0 LANGUAGES C CXX)
+project(EQScope VERSION 1.1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -98,6 +98,13 @@ if(MSVC)
     target_compile_options(EQScope PRIVATE /utf-8)
 endif()
 
+# Humble Bexar bear head logo for the faceplate label (Source/BexarLogo.h)
+juce_add_binary_data(EQScopeBexarLogoData HEADER_NAME BexarLogoData.h NAMESPACE BexarLogoData SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/Resources/logo/humble-bexar-bear-head.png
+    ${CMAKE_CURRENT_SOURCE_DIR}/Resources/logo/humble-bexar-bear-head-cream.png)
+set_target_properties(EQScopeBexarLogoData PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_link_libraries(EQScope PRIVATE EQScopeBexarLogoData)
+
 target_link_libraries(EQScope
     PRIVATE
         juce::juce_audio_utils
@@ -110,6 +117,7 @@ target_link_libraries(EQScope
 option(EQSCOPE_SNAPSHOT "Also build the faceplate screenshot tool" OFF)
 if(EQSCOPE_SNAPSHOT)
     juce_add_console_app(eqscope_snapshot PRODUCT_NAME "eqscope_snapshot")
+    target_link_libraries(eqscope_snapshot PRIVATE EQScopeBexarLogoData)
     target_sources(eqscope_snapshot PRIVATE tools/snapshot.cpp Source/PluginProcessor.cpp Source/PluginEditor.cpp)
     target_include_directories(eqscope_snapshot PRIVATE Source)
     target_compile_definitions(eqscope_snapshot PRIVATE
